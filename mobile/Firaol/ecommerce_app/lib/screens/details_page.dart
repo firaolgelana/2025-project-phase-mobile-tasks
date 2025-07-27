@@ -1,11 +1,47 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../widgets/size_selector.dart';
+import '../models/product.dart';
+import 'package:flutter/foundation.dart';
 
-class DetailsPage extends StatelessWidget {
+class DetailsPage extends StatefulWidget {
   const DetailsPage({super.key});
 
   @override
+  State<DetailsPage> createState() => _DetailsPageState();
+}
+
+class _DetailsPageState extends State<DetailsPage> {
+  Widget buildProductImage(String imagePath) {
+    if (kIsWeb) {
+      return Image.network(
+        imagePath,
+        fit: BoxFit.cover,
+        width: double.infinity,
+      );
+    } else {
+      if (imagePath.startsWith('images/')) {
+        return Image.asset(
+          imagePath,
+          fit: BoxFit.cover,
+          width: double.infinity,
+        );
+      } else {
+        return Image.file(
+          File(imagePath),
+          fit: BoxFit.cover,
+          width: double.infinity,
+        );
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as Map;
+    final index = args['index'];
+    var product = args['product'];
+    final products = args['products'];
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -14,11 +50,7 @@ class DetailsPage extends StatelessWidget {
             children: [
               Stack(
                 children: [
-                  Image.asset(
-                    'images/shoes.jpg',
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
+                  buildProductImage(product.imagePath),
                   Positioned(
                     top: 12,
                     left: 12,
@@ -30,7 +62,7 @@ class DetailsPage extends StatelessWidget {
                           color: Color(0xFF3F47FD),
                         ),
                         onPressed: () {
-                          Navigator.pushNamed(context, '/home');
+                          Navigator.pop(context);
                         },
                       ),
                     ),
@@ -45,41 +77,56 @@ class DetailsPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      children: const [
+                      children: [
                         Text(
-                          "Men's Shoe",
+                          product.category,
                           style: TextStyle(color: Colors.grey),
                         ),
                         Spacer(),
                         Icon(Icons.star, color: Colors.orangeAccent, size: 18),
                         SizedBox(width: 4),
-                        Text('(4.0)', style: TextStyle(color: Colors.grey)),
+                        Text(
+                          '(${product.rating})',
+                          style: TextStyle(color: Colors.grey),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 24),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         Text(
-                          'Derby Leather Shoes',
+                          product.name,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Text('\$120', style: TextStyle(color: Colors.black)),
+                        Text(
+                          '\$${product.price}',
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 24),
                     const SizeSelector(),
                     const SizedBox(height: 24),
-                    const Text(
-                      'A derby leather shoe is a classic and versatile footwear option characterized by its open lacing system, where the shoelace eyelets are sewn on top of the vamp (the upper part of the shoe). This design feature provides a more relaxed and casual look compared to the closed lacing system of oxford shoes. Derby shoes are typically made of high-quality leather, known for its durability and elegance, making them suitable for both formal and casual occasions. With their timeless style and comfortable fit, derby leather shoes are a staple in any well-rounded wardrobe.',
-                    ),
+                    Text(product.description),
                     const SizedBox(height: 50),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              products.removeAt(index);
+                              Navigator.pop(context, {
+                                'products': products,
+                                'action': 'delete',
+                              });
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Product deleted'),
+                                ),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
                               shape: const RoundedRectangleBorder(
@@ -95,7 +142,27 @@ class DetailsPage extends StatelessWidget {
                         const SizedBox(width: 40),
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              final result = await Navigator.pushNamed(
+                                context,
+                                '/add',
+                                arguments: {'product': product, 'index': index},
+                              );
+                              if (result != null && result is Map) {
+                                final updated = result['product'] as Product;
+                                final updatedIndex = result['index'] as int;
+
+                                setState(() {
+                                  products[updatedIndex] = updated;
+                                  product = updated;
+                                });
+                                // ignore: use_build_context_synchronously
+                                Navigator.pop(context, {
+                                  'products': products,
+                                  'action': 'update',
+                                });
+                              }
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF3F47FD),
                               shape: const RoundedRectangleBorder(

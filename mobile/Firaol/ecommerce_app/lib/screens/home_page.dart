@@ -1,8 +1,45 @@
 import 'package:flutter/material.dart';
+import '../models/product.dart';
 import '../widgets/card.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List<Product> products = [
+    Product(
+      name: "Derby Leather Shoes",
+      category: "Men's shoe",
+      description: "description.....",
+      price: 120,
+      rating: 4.0,
+      imagePath: 'images/shoes.jpg',
+      size: 41,
+    ),
+  ];
+void _navigateToAddPage() async {
+  final result = await Navigator.pushNamed(context, '/add');
+
+  if (result != null && result is Map<String, dynamic>) {
+    final newProduct = result['product'];
+    final index = result['index'];
+
+    if (newProduct != null && newProduct is Product) {
+      setState(() {
+        if (index == null) {
+          products.add(newProduct);
+        } else {
+          products[index] = newProduct;
+        }
+      });
+    }
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -93,28 +130,69 @@ class HomePage extends StatelessWidget {
                     'Available Products',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(10),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/search');
+                    },
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(Icons.search, color: Colors.grey),
                     ),
-                    child: Icon(Icons.search, color: Colors.grey),
                   ),
                 ],
               ),
             ),
-            Component(),
-            Component(),
-            Component(),
+            Column(
+              children: products.asMap().entries.map((entry) {
+                final index = entry.key;
+                final product = entry.value;
+
+                return GestureDetector(
+                  onTap: () async {
+                    final result = await Navigator.pushNamed(
+                      context,
+                      '/details',
+                      arguments: {
+                        'product': products[index],
+                        'index': index,
+                        'products': products,
+                      },
+                    );
+
+                    if (result != null && result is Map<String, dynamic>) {
+                      final updatedProducts = result['products'] as List<Product>?;
+                      final action = result['action'] as String?;
+
+                      if (updatedProducts != null && (action == 'delete' || action == 'update')) {
+                        setState(() {
+                          products = updatedProducts;
+                        });
+                      }
+                    }
+
+                  },
+                  child: Component(
+                    name: product.name,
+                    category: product.category,
+                    imagePath: product.imagePath,
+                    rating: product.rating,
+                    price: product.price,
+                  ),
+                );
+              }).toList(),
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, '/add');
+          _navigateToAddPage();
         },
         backgroundColor: Colors.blue,
         shape: CircleBorder(side: BorderSide(color: Colors.blue, width: 2)),

@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/widgets/image_uploader.dart';
 import 'package:flutter/material.dart';
+import '../models/product.dart';
 
 class AddPage extends StatefulWidget {
   const AddPage({super.key});
@@ -9,6 +10,30 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController categoryController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  String? selectedImagePath;
+  Product? editingProduct;
+  int? editingIndex;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)?.settings.arguments as Map?;
+
+    if (args != null && args['product'] != null) {
+      editingProduct = args['product'] as Product;
+      editingIndex = args['index'] as int?;
+
+      nameController.text = editingProduct!.name;
+      categoryController.text = editingProduct!.category;
+      priceController.text = editingProduct!.price.toString();
+      descriptionController.text = editingProduct!.description;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     const inputDecoration = InputDecoration(
@@ -42,45 +67,35 @@ class _AddPageState extends State<AddPage> {
             spacing: 8,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ImageUploader(),
+              ImageUploader(
+                onImageSelected: (path) {
+                  selectedImagePath = path;
+                },
+              ),
+
               Text('name'),
-              TextField(decoration: inputDecoration),
+              TextField(
+                controller: nameController,
+                decoration: inputDecoration,
+              ),
               Text('catagory'),
-              TextField(decoration: inputDecoration),
+              TextField(
+                controller: categoryController,
+                decoration: inputDecoration,
+              ),
               Text('price'),
               TextField(
+                controller: priceController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: 'Enter price',
-                  filled: true,
-                  fillColor: Color(0xFFF2F2F2),
-                  suffixIcon: Padding(
-                    padding: const EdgeInsets.only(right: 12),
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        '\$',
-                        style: TextStyle(color: Colors.black, fontSize: 16),
-                      ),
-                    ),
-                  ),
-                  suffixIconConstraints: BoxConstraints(
-                    minHeight: 0,
-                    minWidth: 0,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                    borderSide: BorderSide.none,
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: 14,
-                    horizontal: 12,
-                  ),
-                ),
+                decoration: inputDecoration,
               ),
 
               Text('description'),
-              TextField(maxLines: 6, decoration: inputDecoration),
+              TextField(
+                controller: descriptionController,
+                maxLines: 6,
+                decoration: inputDecoration,
+              ),
               SizedBox(height: 6),
               Center(
                 child: Column(
@@ -89,7 +104,21 @@ class _AddPageState extends State<AddPage> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          final product = Product(
+                            name: nameController.text,
+                            category: categoryController.text,
+                            price: double.tryParse(priceController.text) ?? 0.0,
+                            description: descriptionController.text,
+                            imagePath: selectedImagePath == null
+                                ? 'images/shoes.jpg'
+                                : selectedImagePath!,
+                          );
+                          Navigator.pop(context, {
+                            'product': product,
+                            'index': editingIndex,
+                          });
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF3F47FD),
                           shape: RoundedRectangleBorder(
@@ -97,7 +126,7 @@ class _AddPageState extends State<AddPage> {
                           ),
                         ),
                         child: Text(
-                          'ADD',
+                          editingProduct != null ? 'UPDATE' : 'ADD',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

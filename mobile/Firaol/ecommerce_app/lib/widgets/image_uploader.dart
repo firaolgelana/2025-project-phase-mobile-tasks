@@ -1,29 +1,35 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'dart:io';
 
 class ImageUploader extends StatefulWidget {
-  const ImageUploader({super.key});
+  final void Function(String) onImageSelected;
+  const ImageUploader({super.key, required this.onImageSelected});
 
   @override
   State<ImageUploader> createState() => _ImageUploaderState();
 }
 
 class _ImageUploaderState extends State<ImageUploader> {
-  File? selectedImage;
+  XFile? selectedImage;
 
   Future<void> pickImage() async {
-    if (await Permission.storage.request().isGranted) {
-      final returnedImage = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
-      );
-      if (returnedImage == null) return;
-
-      setState(() {
-        selectedImage = File(returnedImage.path);
-      });
+    if (!kIsWeb && !(await Permission.storage.request().isGranted)) {
+      return;
     }
+
+    final returnedImage = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
+    if (returnedImage == null) return;
+
+    setState(() {
+      selectedImage = returnedImage;
+    });
+
+    widget.onImageSelected(returnedImage.path);
   }
 
   @override
@@ -48,7 +54,9 @@ class _ImageUploaderState extends State<ImageUploader> {
                   ],
                 ),
               )
-            : Image.file(selectedImage!, fit: BoxFit.cover),
+            : kIsWeb
+            ? Image.network(selectedImage!.path, fit: BoxFit.cover)
+            : Image.file(File(selectedImage!.path), fit: BoxFit.cover),
       ),
     );
   }

@@ -1,4 +1,3 @@
-import 'package:ecommerce_app/widgets/card.dart';
 import 'package:flutter/material.dart';
 import '../widgets/price_range.dart';
 
@@ -22,7 +21,12 @@ class _SearchPageState extends State<SearchPage> {
             Row(
               children: [
                 SizedBox(width: 16),
-                Icon(Icons.arrow_back_ios, color: Color(0xFF3F47FD)),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(Icons.arrow_back_ios, color: Color(0xFF3F47FD)),
+                ),
                 Expanded(
                   child: Center(
                     child: Text('search product', style: TextStyle()),
@@ -69,7 +73,6 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ],
             ),
-            Component(),
             Container(
               margin: EdgeInsets.all(16),
               child: Column(
