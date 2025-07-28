@@ -2,24 +2,11 @@
 
 A new Flutter project.
 
-## setup flutter linter
-flutter_lints is an official package by the Flutter team that provides recommended lint rules to improve your Dart/Flutter code.
+## setup domain layer
 
-It is used to:
+The Domain Layer is the **core** of the clean architecture structure. It contains the **business logic**, **entities**, **use cases**, and **contracts** (i.e., abstract repositories).
 
-- Catch potential bugs or bad practices early
-
-- Enforce a consistent coding style across your team or project
-
-- Improve readability, maintainability, and overall code quality
+This layer is completely **independent of Flutter** or any external libraries, making it highly reusable and testable.
 
 
-### How to Run Linter
-To analyze your code and check for lint issues, 
 
-run:
-``` bash
-flutter analyze
-```
-
-This will display any errors, warnings, or lint violations in your codebase.
