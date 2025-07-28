@@ -2,15 +2,24 @@
 
 A new Flutter project.
 
-## Getting Started
+## setup flutter linter
+flutter_lints is an official package by the Flutter team that provides recommended lint rules to improve your Dart/Flutter code.
 
-This project is a starting point for a Flutter application.
+It is used to:
 
-A few resources to get you started if this is your first Flutter project:
+- Catch potential bugs or bad practices early
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Enforce a consistent coding style across your team or project
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Improve readability, maintainability, and overall code quality
+
+
+### How to Run Linter
+To analyze your code and check for lint issues, 
+
+run:
+``` bash
+flutter analyze
+```
+
+This will display any errors, warnings, or lint violations in your codebase.
