@@ -1,12 +1,36 @@
-# ecommerce_app
+# Domain Layer – eCommerce App
+Designing the domain layer for an eCommerce mobile app using Clean Architecture and Test-Driven Development (TDD) principles.
 
-A new Flutter project.
+This layer is independent of any framework or external library and focuses purely on business logic and application rules.
 
-## setup domain layer
+## Features / Use Cases
+Each use case is implemented as a callable class. These use cases interact only with abstract repositories and return either domain entities or results.
 
-The Domain Layer is the **core** of the clean architecture structure. It contains the **business logic**, **entities**, **use cases**, and **contracts** (i.e., abstract repositories).
+### InsertProduct
+- Adds a new product to the app.
 
-This layer is completely **independent of Flutter** or any external libraries, making it highly reusable and testable.
+- Accepts a Product entity as input.
 
+- Interacts with the ProductRepository.
 
+### UpdateProduct
+- Updates an existing product's details.
+
+- Requires a full Product entity with an existing ID.
+
+- Interacts with the ProductRepository.
+
+### DeleteProduct
+- Deletes a product from the list.
+
+- Accepts a String ID to identify the product.
+
+- Interacts with the ProductRepository.
+
+### GetProduct
+- Retrieves details of a specific product.
+
+- Accepts a String ID.
+
+- Returns a Product entity if found.
 
