@@ -5,7 +5,7 @@ import '../repositories/product_repository.dart';
 
 class ViewProductUsecase {
   final ProductRepository repository;
-  ViewProductUsecase(this.repository);
+  const ViewProductUsecase(this.repository);
 
   Future<Either<Failure, Product>> call(int id) {
     return repository.getProductById(id);

@@ -18,7 +18,7 @@ void main() {
 
   group('ViewProductUsecase', () {
     const productId = 1;
-    final expectedProduct = Product(
+    final expectedProduct = const Product(
       id: 1,
       name: 'Sneakers',
       description: 'A comfortable running shoe',

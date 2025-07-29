@@ -1,36 +1,69 @@
-# Domain Layer – eCommerce App
-Designing the domain layer for an eCommerce mobile app using Clean Architecture and Test-Driven Development (TDD) principles.
+#  Flutter eCommerce App (Clean Architecture)
 
-This layer is independent of any framework or external library and focuses purely on business logic and application rules.
+A modular and testable eCommerce Flutter app built with **Clean Architecture**, **Mockito**, and **Dartz**, following best practices for scalability, separation of concerns, and maintainability.
 
-## Features / Use Cases
-Each use case is implemented as a callable class. These use cases interact only with abstract repositories and return either domain entities or results.
+---
 
-### InsertProduct
-- Adds a new product to the app.
+##  Architecture Overview
 
-- Accepts a Product entity as input.
+This project follows the **Clean Architecture** pattern to divide responsibilities and ensure testability:
 
-- Interacts with the ProductRepository.
+###  Layers
 
-### UpdateProduct
-- Updates an existing product's details.
 
-- Requires a full Product entity with an existing ID.
+- **Domain Layer**  
+  Business logic, entities, repository interfaces, and use cases.
 
-- Interacts with the ProductRepository.
+- **Data Layer**  
+  Data models, API/database implementations, and data source logic.
 
-### DeleteProduct
-- Deletes a product from the list.
+- **Core Layer**  
+  Common/shared code across the app, like constants and error handling.
 
-- Accepts a int ID to identify the product.
+---
 
-- Interacts with the ProductRepository.
+## 📁 Project Structure
 
-### GetProduct
-- Retrieves details of a specific product.
+```bash
+lib
+┣ 📂core
+┃ ┗ 📂error
+┃   ┗ 📜failure.dart
+┣ 📂features
+┃ ┗ 📂products
+┃   ┣ 📂data
+┃   ┃ ┗ 📂models
+┃   ┃   ┗ 📜product_model.dart
+┃   ┗ 📂domain
+┃     ┣ 📂entities
+┃     ┃ ┗ 📜product.dart
+┃     ┣ 📂repositories
+┃     ┃ ┗ 📜product_repository.dart
+┃     ┗ 📂usecases
+┃       ┣ 📜create_product.dart
+┃       ┣ 📜delete_product.dart
+┃       ┣ 📜update_product.dart
+┃       ┣ 📜view_all_products.dart
+┃       ┗ 📜view_specific_product.dart
+┗ 📜main.dart
+```
 
-- Accepts a int ID.
+```bash
+test
+┣ 📂core
+┣ 📂features
+┃ ┗ 📂products
+┃   ┣ 📂data
+┃   ┃ ┗ 📂models
+┃   ┃   ┗ 📜product_model_test.dart
+┃   ┗ 📂domain
+┃     ┗ 📂usecases
+┃       ┣ 📜create_product_test.dart
+┃       ┣ 📜delete_product_test.dart
+┃       ┣ 📜update_product_test.dart
+┃       ┣ 📜view_all_products_test.dart
+┃       ┗ 📜view_product_test.dart
 
-- Returns a Product entity if found.
+┗ 📜widget_test.dart
 
+```

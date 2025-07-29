@@ -18,7 +18,7 @@ void main() {
   });
 
   group('CreateProductUsecase', () {
-    final newProduct = Product(
+    final newProduct = const Product(
       id: 2,
       name: 'New Sneakers',
       description: 'A brand new sneaker model',
