@@ -23,14 +23,14 @@ Each use case is implemented as a callable class. These use cases interact only 
 ### DeleteProduct
 - Deletes a product from the list.
 
-- Accepts a String ID to identify the product.
+- Accepts a int ID to identify the product.
 
 - Interacts with the ProductRepository.
 
 ### GetProduct
 - Retrieves details of a specific product.
 
-- Accepts a String ID.
+- Accepts a int ID.
 
 - Returns a Product entity if found.
 
