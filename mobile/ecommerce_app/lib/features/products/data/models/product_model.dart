@@ -27,5 +27,6 @@ class ProductModel extends Product {
       'price': price,
       'imageUrl': imageUrl,
     };
+  
   }
 }

@@ -1,69 +1,44 @@
-#  Flutter eCommerce App (Clean Architecture)
+# Ecommerce Flutter App — Clean Architecture
+This project is a sample Ecommerce app built using Flutter and structured following Clean Architecture principles. It demonstrates how to organize your codebase with:
 
-A modular and testable eCommerce Flutter app built with **Clean Architecture**, **Mockito**, and **Dartz**, following best practices for scalability, separation of concerns, and maintainability.
+Contracts (Abstract classes/interfaces)
 
----
+Repository pattern
 
-##  Architecture Overview
+Local & Remote Data Sources
 
-This project follows the **Clean Architecture** pattern to divide responsibilities and ensure testability:
+Dependency Inversion
 
-###  Layers
+Network connection checking
 
+## Architecture Layers
+### domain/
+Defines the contracts and business logic.
 
-- **Domain Layer**  
-  Business logic, entities, repository interfaces, and use cases.
+entities/ – Plain Dart classes for your core objects (Product).
 
-- **Data Layer**  
-  Data models, API/database implementations, and data source logic.
+repositories/ – Abstract class (contract) defining the required repository methods.
 
-- **Core Layer**  
-  Common/shared code across the app, like constants and error handling.
+usecases/ – Classes for business rules (e.g., GetAllProductsUseCase).
 
----
+### data/
+Contains data sources, models, and the implementation of the repository.
 
-## 📁 Project Structure
+datasources/
 
-```bash
-lib
-┣ 📂core
-┃ ┗ 📂error
-┃   ┗ 📜failure.dart
-┣ 📂features
-┃ ┗ 📂products
-┃   ┣ 📂data
-┃   ┃ ┗ 📂models
-┃   ┃   ┗ 📜product_model.dart
-┃   ┗ 📂domain
-┃     ┣ 📂entities
-┃     ┃ ┗ 📜product.dart
-┃     ┣ 📂repositories
-┃     ┃ ┗ 📜product_repository.dart
-┃     ┗ 📂usecases
-┃       ┣ 📜create_product.dart
-┃       ┣ 📜delete_product.dart
-┃       ┣ 📜update_product.dart
-┃       ┣ 📜view_all_products.dart
-┃       ┗ 📜view_specific_product.dart
-┗ 📜main.dart
-```
+remote_product_data_source.dart – Fetches data from APIs.
 
-```bash
-test
-┣ 📂core
-┣ 📂features
-┃ ┗ 📂products
-┃   ┣ 📂data
-┃   ┃ ┗ 📂models
-┃   ┃   ┗ 📜product_model_test.dart
-┃   ┗ 📂domain
-┃     ┗ 📂usecases
-┃       ┣ 📜create_product_test.dart
-┃       ┣ 📜delete_product_test.dart
-┃       ┣ 📜update_product_test.dart
-┃       ┣ 📜view_all_products_test.dart
-┃       ┗ 📜view_product_test.dart
+local_product_data_source.dart – Fetches/saves data locally.
 
-┗ 📜widget_test.dart
+models/ – DTOs used for JSON conversion.
 
-```
+repositories/ – Implements the contract using data sources.
+
+### core/
+platform/
+
+network_info.dart – Checks internet connection.
+
+error/
+
+exceptions.dart, failures.dart – Error handling helpers.
