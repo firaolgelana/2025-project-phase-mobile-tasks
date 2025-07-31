@@ -12,10 +12,10 @@ class MockLocalDataSource extends Mock implements ProductLocalDataSource {}
 class MockNetworkInfo extends Mock implements NetworkInfo {}
 
 void main() {
-  ProductRepositoryImpl repository;
-  MockRemoteDataSource mockRemoteDataSource;
-  MockLocalDataSource mockLocalDataSource;
-  MockNetworkInfo mockNetworkInfo;
+  late ProductRepositoryImpl repository;
+  late MockRemoteDataSource mockRemoteDataSource;
+  late MockLocalDataSource mockLocalDataSource;
+  late MockNetworkInfo mockNetworkInfo;
   setUp(() {
     mockRemoteDataSource = MockRemoteDataSource();
     mockLocalDataSource = MockLocalDataSource();
@@ -23,8 +23,16 @@ void main() {
     repository = ProductRepositoryImpl(
       remoteDataSource: mockRemoteDataSource,
       localDataSource: mockLocalDataSource,
-      networkInfo: mockNetworkInfo
+      networkInfo: mockNetworkInfo,
     );
+  });
 
+  group('getAllProducts', () {
+    test('should check if the device is online', () async {
+      when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+
+      await repository.getAllProducts();
+      verify(mockNetworkInfo.isConnected);
+    });
   });
 }

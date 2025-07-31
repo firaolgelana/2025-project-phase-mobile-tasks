@@ -30,7 +30,7 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Future<Either<Failure, List<Product>>> getAllProducts() {
-    // TODO: implement getAllProducts
+    networkInfo.isConnected;
     throw UnimplementedError();
   }
 
