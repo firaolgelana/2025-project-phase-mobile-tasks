@@ -4,17 +4,19 @@ import 'package:ecommerce_app/core/error/failures.dart';
 import 'package:ecommerce_app/core/platform/network_info.dart';
 import 'package:ecommerce_app/features/products/data/datasources/product_local_data_source.dart';
 import 'package:ecommerce_app/features/products/data/datasources/product_remote_data_source.dart';
+import 'package:ecommerce_app/features/products/data/models/product_model.dart';
 import 'package:ecommerce_app/features/products/data/repositories/product_repository_impl.dart';
 import 'package:ecommerce_app/features/products/domain/entities/product.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-class MockProductRemoteDataSource extends Mock implements ProductRemoteDataSource {}
-
-class MockProductLocalDataSource extends Mock implements ProductLocalDataSource {}
-
-class MockNetworkInfo extends Mock implements NetworkInfo {}
-
+import 'product_repository_impl_test.mocks.dart'; 
+@GenerateMocks([
+  ProductRemoteDataSource, 
+  ProductLocalDataSource, 
+  NetworkInfo
+  ])
 void main() {
   late ProductRepositoryImpl repository;
   late MockProductRemoteDataSource mockRemoteDataSource;
@@ -22,7 +24,7 @@ void main() {
   late MockNetworkInfo mockNetworkInfo;
 
   final tProductList = const [
-    Product(
+    ProductModel(
       id: 1,
       name: 'Test Product',
       price: 10.0,
@@ -99,16 +101,16 @@ void main() {
 
     runTestsOffline(() {
       test('should return cached products when offline', () async {
-        when(mockLocalDataSource.getLastProducts()).thenAnswer((_) async => tProductList);
+        when(mockLocalDataSource.getCachedProducts()).thenAnswer((_) async => tProductList);
 
         final result = await repository.getAllProducts();
 
-        verify(mockLocalDataSource.getLastProducts());
+        verify(mockLocalDataSource.getCachedProducts());
         expect(result, Right(tProductList));
       });
 
       test('should return CacheFailure when no cache', () async {
-        when(mockLocalDataSource.getLastProducts()).thenThrow(CacheException());
+        when(mockLocalDataSource.getCachedProducts()).thenThrow(CacheException());
 
         final result = await repository.getAllProducts();
 

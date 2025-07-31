@@ -33,6 +33,7 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+  internet_connection_checker: ^3.0.1
   cupertino_icons: ^1.0.8
   mocktail: ^1.0.1
   # Service locator
@@ -44,6 +45,7 @@ dependencies:
   # Functional programming thingies
   dartz: ^0.10.1
   mockito: ^5.5.0
+  build_runner: ^2.4.9
 
 dev_dependencies:
   flutter_test:

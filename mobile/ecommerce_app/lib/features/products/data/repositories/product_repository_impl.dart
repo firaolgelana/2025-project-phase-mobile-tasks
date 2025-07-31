@@ -6,7 +6,7 @@ import '../../domain/entities/product.dart';
 import '../../domain/repositories/product_repository.dart';
 import '../datasources/product_local_data_source.dart';
 import '../datasources/product_remote_data_source.dart';
-import '../models/product_model.dart'; // Needed if casting Product to ProductModel
+import '../models/product_model.dart';
 
 class ProductRepositoryImpl implements ProductRepository {
   final ProductRemoteDataSource remoteDataSource;
@@ -24,10 +24,10 @@ class ProductRepositoryImpl implements ProductRepository {
     if (await networkInfo.isConnected) {
       try {
         final remoteProducts = await remoteDataSource.getAllProducts();
-        await localDataSource.cacheProducts(remoteProducts); // Cache list locally
+        await localDataSource.cacheProducts(remoteProducts);
         return Right(remoteProducts);
       } catch (e) {
-        return const Left(ServerFailure('Server error while fetching products'));
+        return const Left(ServerFailure('server error'));
       }
     } else {
       try {
@@ -44,10 +44,10 @@ class ProductRepositoryImpl implements ProductRepository {
     if (await networkInfo.isConnected) {
       try {
         final product = await remoteDataSource.getProductById(id);
-        await localDataSource.cacheProduct(product as ProductModel); 
+        await localDataSource.cacheProduct(product as ProductModel);
         return Right(product);
       } catch (e) {
-        return const Left(ServerFailure('Server error while fetching product'));
+        return const Left(ServerFailure('server error'));
       }
     } else {
       try {
@@ -70,7 +70,7 @@ class ProductRepositoryImpl implements ProductRepository {
         return const Left(ServerFailure('Failed to create product'));
       }
     } else {
-      return const Left(ServerFailure('No internet connection'));
+      return const Left(NetworkFailure('No internet connection'));
     }
   }
 
@@ -85,7 +85,7 @@ class ProductRepositoryImpl implements ProductRepository {
         return const Left(ServerFailure('Failed to update product'));
       }
     } else {
-      return const Left(ServerFailure('No internet connection'));
+      return const Left(NetworkFailure('No internet connection'));
     }
   }
 
@@ -94,13 +94,13 @@ class ProductRepositoryImpl implements ProductRepository {
     if (await networkInfo.isConnected) {
       try {
         final deletedProduct = await remoteDataSource.deleteProduct(id);
-        await localDataSource.clearCache(); 
+        await localDataSource.clearCache();
         return Right(deletedProduct);
       } catch (e) {
         return const Left(ServerFailure('Failed to delete product'));
       }
     } else {
-      return const Left(ServerFailure('No internet connection'));
+      return const Left(NetworkFailure('No internet connection'));
     }
   }
 }
