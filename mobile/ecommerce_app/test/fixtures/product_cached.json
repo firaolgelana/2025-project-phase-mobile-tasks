@@ -1,0 +1,7 @@
+{
+    "id":1,
+    "name":"Test Product",
+    "description":"This is a test product",
+    "price":29.99,
+    "imageUrl":"https://example.com/test-product.jpg"
+}
