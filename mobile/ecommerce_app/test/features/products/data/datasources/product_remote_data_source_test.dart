@@ -1,7 +1,7 @@
-
 import 'dart:convert';
 
 import 'package:ecommerce_app/core/error/exceptions.dart';
+import 'package:ecommerce_app/core/utils/api_client_helper.dart';
 import 'package:ecommerce_app/features/products/data/datasources/product_remote_data_source.dart';
 import 'package:ecommerce_app/features/products/data/models/product_model.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -12,133 +12,125 @@ import 'package:mockito/mockito.dart';
 import '../../../../fixtures/fixture_reader.dart';
 import 'product_remote_data_source_test.mocks.dart';
 
-@GenerateMocks([http.Client])
-void main(){
+@GenerateMocks([ApiClientHelper])
+void main() {
   late ProductRemoteDataSourceImp dataSource;
-  late MockClient mockHttpClient;
+  late MockApiClientHelper mockApiHelper;
+
   setUp(() {
-    mockHttpClient = MockClient();
-    dataSource = ProductRemoteDataSourceImp(client: mockHttpClient);
+    mockApiHelper = MockApiClientHelper();
+    dataSource = ProductRemoteDataSourceImp(apiHelper: mockApiHelper);
   });
+
   const tId = 1;
   final tProductModel = ProductModel.fromJson(json.decode(fixture('product.json')));
-    group('getAllProducts', () {
-    final productListJson = fixture('products.json');
-    final expectedList = (json.decode(productListJson) as List)
-        .map((item) => ProductModel.fromJson(item))
-        .toList();
+  final productListJson = fixture('products.json');
+  final expectedList = (json.decode(productListJson) as List)
+      .map((item) => ProductModel.fromJson(item))
+      .toList();
 
-    test(
-        'should perform a GET request to the correct URL with application/json header',
-        () async {
-      // Arrange
-      when(mockHttpClient.get(
-        Uri.parse('https://api.example.com/products'),
-        headers: anyNamed('headers'),
-      )).thenAnswer(
+  group('getAllProducts', () {
+    test('should return list of products when status is 200', () async {
+      when(mockApiHelper.get(any)).thenAnswer(
         (_) async => http.Response(productListJson, 200),
       );
 
-      // Act
       final result = await dataSource.getAllProducts();
 
-      // Assert
-      verify(mockHttpClient.get(
-        Uri.parse('https://api.example.com/products'),
-        headers: {'Content-Type': 'application/json'},
-      )).called(1);
-
       expect(result, equals(expectedList));
+      verify(mockApiHelper.get('https://api.example.com/products')).called(1);
     });
 
-    test('should throw ServerException when response code is not 200',
-        () async {
-      // Arrange
-      when(mockHttpClient.get(any, headers: anyNamed('headers')))
+    test('should throw ServerException when status is not 200', () async {
+      when(mockApiHelper.get(any))
           .thenAnswer((_) async => http.Response('Error', 404));
 
-      // Act & Assert
-      expect(() => dataSource.getAllProducts(),
-          throwsA(isA<ServerException>()));
+      expect(() => dataSource.getAllProducts(), throwsA(isA<ServerException>()));
     });
   });
 
   group('getProductById', () {
-    test('should return Product when the response code is 200', () async {
-      // arrange
-      when(mockHttpClient.get(
-        Uri.parse('https://api.example.com/products/$tId'),
-      )).thenAnswer((_) async => http.Response(fixture('product.json'), 200));
+    test('should return Product when status is 200', () async {
+      when(mockApiHelper.get(any)).thenAnswer(
+          (_) async => http.Response(fixture('product.json'), 200));
 
-      // act
       final result = await dataSource.getProductById(tId);
 
-      // assert
       expect(result, equals(tProductModel));
+      verify(mockApiHelper.get('https://api.example.com/products/$tId')).called(1);
     });
 
-    test('should throw ServerException when the response code is not 200', () async {
-      when(mockHttpClient.get(any)).thenAnswer((_) async => http.Response('Error', 404));
+    test('should throw ServerException when status is not 200', () async {
+      when(mockApiHelper.get(any))
+          .thenAnswer((_) async => http.Response('Error', 404));
 
       expect(() => dataSource.getProductById(tId), throwsA(isA<ServerException>()));
     });
   });
 
   group('updateProduct', () {
-    test('should return updated Product when response code is 200', () async {
-      when(mockHttpClient.put(
-        Uri.parse('https://api.example.com/products/${tProductModel.id}'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(tProductModel.toJson()),
-      )).thenAnswer((_) async => http.Response(fixture('product.json'), 200));
+    test('should return updated Product when status is 200', () async {
+      when(mockApiHelper.put(any, any)).thenAnswer(
+        (_) async => http.Response(fixture('product.json'), 200),
+      );
 
       final result = await dataSource.updateProduct(tProductModel);
 
       expect(result, equals(tProductModel));
+      verify(mockApiHelper.put(
+        'https://api.example.com/products/${tProductModel.id}',
+        tProductModel.toJson(),
+      )).called(1);
     });
 
-    test('should throw ServerException when the response code is not 200', () async {
-      when(mockHttpClient.put(any, headers: anyNamed('headers'), body: anyNamed('body')))
-          .thenAnswer((_) async => http.Response('Error', 400));
+    test('should throw ServerException when status is not 200', () async {
+      when(mockApiHelper.put(any, any)).thenAnswer(
+        (_) async => http.Response('Error', 400),
+      );
 
       expect(() => dataSource.updateProduct(tProductModel), throwsA(isA<ServerException>()));
     });
   });
 
   group('deleteProduct', () {
-    test('should return deleted Product when response code is 200', () async {
-      when(mockHttpClient.delete(
-        Uri.parse('https://api.example.com/products/$tId'),
-      )).thenAnswer((_) async => http.Response(fixture('product.json'), 200));
+    test('should return deleted Product when status is 200', () async {
+      when(mockApiHelper.delete(any)).thenAnswer(
+        (_) async => http.Response(fixture('product.json'), 200),
+      );
 
       final result = await dataSource.deleteProduct(tId);
 
       expect(result, equals(tProductModel));
+      verify(mockApiHelper.delete('https://api.example.com/products/$tId')).called(1);
     });
 
-    test('should throw ServerException when the response code is not 200', () async {
-      when(mockHttpClient.delete(any)).thenAnswer((_) async => http.Response('Error', 404));
+    test('should throw ServerException when status is not 200', () async {
+      when(mockApiHelper.delete(any))
+          .thenAnswer((_) async => http.Response('Error', 404));
 
       expect(() => dataSource.deleteProduct(tId), throwsA(isA<ServerException>()));
     });
   });
 
   group('createProduct', () {
-    test('should return created Product when response code is 201', () async {
-      when(mockHttpClient.post(
-        Uri.parse('https://api.example.com/products'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(tProductModel.toJson()),
-      )).thenAnswer((_) async => http.Response(fixture('product.json'), 201));
+    test('should return created Product when status is 201', () async {
+      when(mockApiHelper.post(any, any)).thenAnswer(
+        (_) async => http.Response(fixture('product.json'), 201),
+      );
 
       final result = await dataSource.createProduct(tProductModel);
 
       expect(result, equals(tProductModel));
+      verify(mockApiHelper.post(
+        'https://api.example.com/products',
+        tProductModel.toJson(),
+      )).called(1);
     });
 
-    test('should throw ServerException when the response code is not 201', () async {
-      when(mockHttpClient.post(any, headers: anyNamed('headers'), body: anyNamed('body')))
-          .thenAnswer((_) async => http.Response('Error', 400));
+    test('should throw ServerException when status is not 201', () async {
+      when(mockApiHelper.post(any, any)).thenAnswer(
+        (_) async => http.Response('Error', 400),
+      );
 
       expect(() => dataSource.createProduct(tProductModel), throwsA(isA<ServerException>()));
     });

@@ -15,21 +15,22 @@ abstract class ProductLocalDataSource {
 }
 
 class ProductLocalDataSourceImp implements ProductLocalDataSource {
+  final cachedProducts = 'CACHED_PRODUCTS';
   final SharedPreferences sharedPreferences;
   ProductLocalDataSourceImp({required this.sharedPreferences});
   @override
   Future<void> cacheProduct(ProductModel productToCache) async {
-    final cachedList = sharedPreferences.getStringList('CACHED_PRODUCTS') ?? [];
+    final cachedList = sharedPreferences.getStringList(cachedProducts) ?? [];
 
     final updatedList = [
       ...cachedList.where((jsonStr) {
         final product = ProductModel.fromJson(json.decode(jsonStr));
-        return product.id != productToCache.id; // remove if already cached
+        return product.id != productToCache.id; 
       }),
       json.encode(productToCache.toJson()),
     ];
 
-    final success = await sharedPreferences.setStringList('CACHED_PRODUCTS', updatedList);
+    final success = await sharedPreferences.setStringList(cachedProducts, updatedList);
     if (!success) {
       throw CacheException();
     }
@@ -43,7 +44,7 @@ class ProductLocalDataSourceImp implements ProductLocalDataSource {
         .map((product) => json.encode((product as ProductModel).toJson()))
         .toList();
 
-    final success = await sharedPreferences.setStringList('CACHED_PRODUCTS', jsonList);
+    final success = await sharedPreferences.setStringList(cachedProducts, jsonList);
     if (!success) throw CacheException();
     return;
   }
@@ -51,7 +52,7 @@ class ProductLocalDataSourceImp implements ProductLocalDataSource {
 
   @override
   Future<void> clearCache() async {
-    final success = await sharedPreferences.remove('CACHED_PRODUCTS');
+    final success = await sharedPreferences.remove(cachedProducts);
     if (!success) throw CacheException();
     return;
   }
@@ -59,7 +60,7 @@ class ProductLocalDataSourceImp implements ProductLocalDataSource {
 
   @override
   Future<List<Product>> getCachedProducts() {
-    final jsonList = sharedPreferences.getStringList('CACHED_PRODUCTS');
+    final jsonList = sharedPreferences.getStringList(cachedProducts);
     if (jsonList == null) {
       throw CacheException();
     }
@@ -71,7 +72,7 @@ class ProductLocalDataSourceImp implements ProductLocalDataSource {
 
   @override
   Future<Product> getProductById(int id) {
-    final jsonList = sharedPreferences.getStringList('CACHED_PRODUCTS');
+    final jsonList = sharedPreferences.getStringList(cachedProducts);
     if (jsonList == null) {
       throw CacheException();
     }
