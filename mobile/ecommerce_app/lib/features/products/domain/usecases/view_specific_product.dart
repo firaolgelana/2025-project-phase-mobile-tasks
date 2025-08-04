@@ -7,7 +7,7 @@ class ViewProductUsecase {
   final ProductRepository repository;
   const ViewProductUsecase(this.repository);
 
-  Future<Either<Failure, Product>> call(int id) {
+  Future<Either<Failure, Product>> call(String id) {
     return repository.getProductById(id);
   }
 }

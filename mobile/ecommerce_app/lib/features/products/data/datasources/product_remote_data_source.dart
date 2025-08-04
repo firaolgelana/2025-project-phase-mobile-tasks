@@ -6,9 +6,9 @@ import '../models/product_model.dart';
 
 abstract class ProductRemoteDataSource {
   Future<List<Product>> getAllProducts();
-  Future<Product> getProductById(int id);
+  Future<Product> getProductById(String id);
   Future<Product> updateProduct(Product product);
-  Future<Product> deleteProduct(int id);
+  Future<Product> deleteProduct(String id);
   Future<Product> createProduct(Product product);
 }
 
@@ -17,12 +17,16 @@ class ProductRemoteDataSourceImp implements ProductRemoteDataSource {
 
   ProductRemoteDataSourceImp({required this.apiHelper});
 
+  static const String baseUrl =
+      'https://g5-flutter-learning-path-be.onrender.com/api/v3/products';
+
   @override
   Future<List<Product>> getAllProducts() async {
-    final response = await apiHelper.get('https://api.example.com/products');
+    final response = await apiHelper.get(baseUrl);
 
     if (response.statusCode == 200) {
-      final List<dynamic> jsonList = json.decode(response.body);
+      final decoded = json.decode(response.body);
+      final List<dynamic> jsonList = decoded['data'];
       return jsonList.map((json) => ProductModel.fromJson(json)).toList();
     } else {
       throw ServerException();
@@ -30,35 +34,39 @@ class ProductRemoteDataSourceImp implements ProductRemoteDataSource {
   }
 
   @override
-  Future<Product> getProductById(int id) async {
-    final response = await apiHelper.get('https://api.example.com/products/$id');
+  Future<Product> getProductById(String id) async {
+    final response = await apiHelper.get('$baseUrl/$id');
+
     if (response.statusCode == 200) {
-      return ProductModel.fromJson(json.decode(response.body));
+      final decoded = json.decode(response.body);
+      return ProductModel.fromJson(decoded['data']);
     } else {
       throw ServerException();
     }
   }
 
-@override
-Future<Product> updateProduct(Product product) async {
-  final response = await apiHelper.put(
-    'https://api.example.com/products/${product.id}',
-    (product as ProductModel).toJson(), 
-  );
+  @override
+  Future<Product> updateProduct(Product product) async {
+    final response = await apiHelper.put(
+      '$baseUrl/${product.id}',
+      (product as ProductModel).toJson(),
+    );
 
-  if (response.statusCode == 200) {
-    return ProductModel.fromJson(json.decode(response.body));
-  } else {
-    throw ServerException();
+    if (response.statusCode == 200) {
+      final decoded = json.decode(response.body);
+      return ProductModel.fromJson(decoded['data']);
+    } else {
+      throw ServerException();
+    }
   }
-}
-
 
   @override
-  Future<Product> deleteProduct(int id) async {
-    final response = await apiHelper.delete('https://api.example.com/products/$id');
+  Future<Product> deleteProduct(String id) async {
+    final response = await apiHelper.delete('$baseUrl/$id');
+
     if (response.statusCode == 200) {
-      return ProductModel.fromJson(json.decode(response.body));
+      final decoded = json.decode(response.body);
+      return ProductModel.fromJson(decoded['data']);
     } else {
       throw ServerException();
     }
@@ -67,11 +75,13 @@ Future<Product> updateProduct(Product product) async {
   @override
   Future<Product> createProduct(Product product) async {
     final response = await apiHelper.post(
-      'https://api.example.com/products',
+      baseUrl,
       (product as ProductModel).toJson(),
     );
+
     if (response.statusCode == 201) {
-      return ProductModel.fromJson(json.decode(response.body));
+      final decoded = json.decode(response.body);
+      return ProductModel.fromJson(decoded['data']);
     } else {
       throw ServerException();
     }

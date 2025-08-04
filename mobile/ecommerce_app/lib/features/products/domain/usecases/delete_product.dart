@@ -7,7 +7,7 @@ class DeleteProductUsecase {
   final ProductRepository repository;
   const DeleteProductUsecase(this.repository);
 
-  Future<Either<Failure, Product>> call(int id) {
+  Future<Either<Failure, Product>> call(String id) {
     return repository.deleteProduct(id);
   }
 }

@@ -19,7 +19,7 @@ void main() {
 
   group('UpdateProductUsecase', () {
     final updatedProduct = const Product(
-      id: 1,
+      id: '1',
       name: 'Updated Sneakers',
       description: 'Updated description',
       price: 119.99,

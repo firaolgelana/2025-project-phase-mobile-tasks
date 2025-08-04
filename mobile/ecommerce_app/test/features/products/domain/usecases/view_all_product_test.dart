@@ -20,14 +20,14 @@ void main() {
   group('ViewAllProductsUsecase', () {
     final products = [
       const Product(
-        id: 1,
+        id: '1',
         name: 'Sneakers',
         description: 'A comfortable running shoe',
         price: 99.99,
         imageUrl: 'https://example.com/shoe1.jpg',
       ),
       const Product(
-        id: 2,
+        id: '2',
         name: 'Boots',
         description: 'Durable winter boots',
         price: 149.99,

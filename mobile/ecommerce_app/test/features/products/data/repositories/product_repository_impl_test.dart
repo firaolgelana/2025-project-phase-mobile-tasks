@@ -25,14 +25,14 @@ void main() {
 
   final tProductList = const [
     ProductModel(
-      id: 1,
+      id: '1',
       name: 'Test Product',
       price: 10.0,
       description: 'Test Description',
       imageUrl: 'http://example.com/image.jpg',
     ),
     Product(
-      id: 2,
+      id: '2',
       name: 'Second Product',
       price: 24.5,
       description: 'Another description',
@@ -122,29 +122,29 @@ void main() {
   group('getProductById', () {
     runTestsOnline(() {
       test('should return product from remote datasource', () async {
-        when(mockRemoteDataSource.getProductById(1)).thenAnswer((_) async => tProduct);
+        when(mockRemoteDataSource.getProductById('1')).thenAnswer((_) async => tProduct);
 
-        final result = await repository.getProductById(1);
+        final result = await repository.getProductById('1');
 
-        verify(mockRemoteDataSource.getProductById(1));
+        verify(mockRemoteDataSource.getProductById('1'));
         expect(result, Right(tProduct));
       });
     });
 
     runTestsOffline(() {
       test('should return product from local datasource', () async {
-        when(mockLocalDataSource.getProductById(1)).thenAnswer((_) async => tProduct);
+        when(mockLocalDataSource.getProductById('1')).thenAnswer((_) async => tProduct);
 
-        final result = await repository.getProductById(1);
+        final result = await repository.getProductById('1');
 
-        verify(mockLocalDataSource.getProductById(1));
+        verify(mockLocalDataSource.getProductById('1'));
         expect(result, Right(tProduct));
       });
 
       test('should return CacheFailure when no cached product', () async {
-        when(mockLocalDataSource.getProductById(1)).thenThrow(CacheException());
+        when(mockLocalDataSource.getProductById('1')).thenThrow(CacheException());
 
-        final result = await repository.getProductById(1);
+        final result = await repository.getProductById('1');
 
         expect(result, const Left(CacheFailure('No cached product found')));
       });
@@ -212,18 +212,18 @@ void main() {
   group('deleteProduct', () {
     runTestsOnline(() {
       test('should delete product remotely', () async {
-        when(mockRemoteDataSource.deleteProduct(1)).thenAnswer((_) async => tProduct);
+        when(mockRemoteDataSource.deleteProduct('1')).thenAnswer((_) async => tProduct);
 
-        final result = await repository.deleteProduct(1);
+        final result = await repository.deleteProduct('1');
 
-        verify(mockRemoteDataSource.deleteProduct(1));
+        verify(mockRemoteDataSource.deleteProduct('1'));
         expect(result, Right(tProduct));
       });
 
       test('should return ServerFailure when deletion fails', () async {
-        when(mockRemoteDataSource.deleteProduct(1)).thenThrow(ServerException());
+        when(mockRemoteDataSource.deleteProduct('1')).thenThrow(ServerException());
 
-        final result = await repository.deleteProduct(1);
+        final result = await repository.deleteProduct('1');
 
         expect(result, const Left(ServerFailure('Failed to delete product')));
       });
@@ -231,7 +231,7 @@ void main() {
 
     runTestsOffline(() {
       test('should return NetworkFailure when offline', () async {
-        final result = await repository.deleteProduct(1);
+        final result = await repository.deleteProduct('1');
 
         expect(result, const Left(NetworkFailure('No internet connection')));
       });

@@ -10,7 +10,7 @@ abstract class ProductLocalDataSource {
   Future<void> cacheProducts(List<Product> products);
   Future<List<Product>> getCachedProducts();
   Future<void> cacheProduct(ProductModel productToCache);
-  Future<Product> getProductById(int id);
+  Future<Product> getProductById(String id);
   Future<void> clearCache();
 }
 
@@ -71,7 +71,7 @@ class ProductLocalDataSourceImp implements ProductLocalDataSource {
   }
 
   @override
-  Future<Product> getProductById(int id) {
+  Future<Product> getProductById(String id) {
     final jsonList = sharedPreferences.getStringList(cachedProducts);
     if (jsonList == null) {
       throw CacheException();

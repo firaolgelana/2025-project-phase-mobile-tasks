@@ -1,7 +1,12 @@
-{
-    "id":1,
-    "name":"Test Product",
-    "description":"This is a test product",
-    "price":29.99,
-    "imageUrl":"https://example.com/test-product.jpg"
+  {
+  "statusCode": 200,
+  "message": "",
+  "data": {
+      "id": "66c775b9322c0bf78ca69c59",
+      "name": "PC",
+      "description": "long description",
+      "price": 123,
+      "imageUrl": "https://res.cloudinary.com/g5-mobile-track/image/upload/v1724347832/images/niqoqvv6rvwuatzuikkr.png"
+  }
 }
+
