@@ -14,7 +14,7 @@ void main() {
   late MockProductRepository mockProductRepository;
 
   const tProduct = Product(
-    id: 1,
+    id: '1',
     name: 'Sneakers',
     price: 99.99,
     description: 'A comfortable running shoe',
@@ -28,7 +28,7 @@ void main() {
   });
 
   group('DeleteProductUsecase', () {
-    const productId = 1;
+    const productId = '1';
 
     test('should delete product successfully', () async {
       when(mockProductRepository.deleteProduct(productId))

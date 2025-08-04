@@ -68,7 +68,7 @@ void main() {
         when(mockSharedPreferences.getStringList(any)).thenReturn([jsonString]);
 
         // act
-        final result = await dataSource.getProductById(1);
+        final result = await dataSource.getProductById('1');
 
         // assert
         final expectedProduct = ProductModel.fromJson(
@@ -88,7 +88,7 @@ void main() {
 
         // act & assert
         expect(
-          () => dataSource.getProductById(999),
+          () => dataSource.getProductById('999'),
           throwsA(isA<CacheException>()),
         );
       },

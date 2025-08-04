@@ -20,23 +20,24 @@ void main(){
     mockHttpClient = MockClient();
     dataSource = ProductRemoteDataSourceImp(client: mockHttpClient);
   });
-  const tId = 1;
-  final tProductModel = ProductModel.fromJson(json.decode(fixture('product.json')));
-    group('getAllProducts', () {
-    final productListJson = fixture('products.json');
-    final expectedList = (json.decode(productListJson) as List)
-        .map((item) => ProductModel.fromJson(item))
-        .toList();
+    const tId = '1';
+    final singleJson = json.decode(fixture('product.json'))['data'];
+    final productListJson = json.decode(fixture('products.json'))['data'];
 
+    final tProductModel = ProductModel.fromJson(singleJson);
+    final expectedList = (productListJson as List)
+      .map((item) => ProductModel.fromJson(item))
+      .toList();
+    group('getAllProducts', () {
     test(
         'should perform a GET request to the correct URL with application/json header',
         () async {
       // Arrange
       when(mockHttpClient.get(
-        Uri.parse('https://api.example.com/products'),
+        Uri.parse('https://g5-flutter-learning-path-be.onrender.com/api/v3/products'),
         headers: anyNamed('headers'),
       )).thenAnswer(
-        (_) async => http.Response(productListJson, 200),
+        (_) async => http.Response(json.encode({'data': productListJson}), 200),
       );
 
       // Act
@@ -44,7 +45,7 @@ void main(){
 
       // Assert
       verify(mockHttpClient.get(
-        Uri.parse('https://api.example.com/products'),
+        Uri.parse('https://g5-flutter-learning-path-be.onrender.com/api/v3/products'),
         headers: {'Content-Type': 'application/json'},
       )).called(1);
 
@@ -67,7 +68,7 @@ void main(){
     test('should return Product when the response code is 200', () async {
       // arrange
       when(mockHttpClient.get(
-        Uri.parse('https://api.example.com/products/$tId'),
+        Uri.parse('https://g5-flutter-learning-path-be.onrender.com/api/v3/products/$tId'),
       )).thenAnswer((_) async => http.Response(fixture('product.json'), 200));
 
       // act
@@ -87,7 +88,7 @@ void main(){
   group('updateProduct', () {
     test('should return updated Product when response code is 200', () async {
       when(mockHttpClient.put(
-        Uri.parse('https://api.example.com/products/${tProductModel.id}'),
+        Uri.parse('https://g5-flutter-learning-path-be.onrender.com/api/v3/products/${tProductModel.id}'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(tProductModel.toJson()),
       )).thenAnswer((_) async => http.Response(fixture('product.json'), 200));
@@ -108,7 +109,7 @@ void main(){
   group('deleteProduct', () {
     test('should return deleted Product when response code is 200', () async {
       when(mockHttpClient.delete(
-        Uri.parse('https://api.example.com/products/$tId'),
+        Uri.parse('https://g5-flutter-learning-path-be.onrender.com/api/v3/products/$tId'),
       )).thenAnswer((_) async => http.Response(fixture('product.json'), 200));
 
       final result = await dataSource.deleteProduct(tId);
@@ -126,7 +127,7 @@ void main(){
   group('createProduct', () {
     test('should return created Product when response code is 201', () async {
       when(mockHttpClient.post(
-        Uri.parse('https://api.example.com/products'),
+        Uri.parse('https://g5-flutter-learning-path-be.onrender.com/api/v3/products'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(tProductModel.toJson()),
       )).thenAnswer((_) async => http.Response(fixture('product.json'), 201));

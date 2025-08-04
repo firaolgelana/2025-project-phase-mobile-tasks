@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
    var productModel = const ProductModel(
-    id: 1,
+    id: '1',
     name: 'Test Product',
     description: 'This is a test product',
     price: 49.99,
@@ -11,7 +11,7 @@ void main() {
   );
 
   final productJson = {
-    'id': 1,
+    'id': '1',
     'name': 'Test Product',
     'description': 'This is a test product',
     'price': 49.99,

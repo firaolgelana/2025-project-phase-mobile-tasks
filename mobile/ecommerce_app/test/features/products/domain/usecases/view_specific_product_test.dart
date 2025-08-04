@@ -19,9 +19,9 @@ void main() {
   });
 
   group('ViewProductUsecase', () {
-    const productId = 1;
+    const productId = '1';
     final expectedProduct = const Product(
-      id: 1,
+      id: '1',
       name: 'Sneakers',
       description: 'A comfortable running shoe',
       price: 99.99,

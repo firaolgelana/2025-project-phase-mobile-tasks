@@ -53,7 +53,7 @@ class MockProductRemoteDataSource extends _i1.Mock
           as _i4.Future<List<_i2.Product>>);
 
   @override
-  _i4.Future<_i2.Product> getProductById(int? id) =>
+  _i4.Future<_i2.Product> getProductById(String? id) =>
       (super.noSuchMethod(
             Invocation.method(#getProductById, [id]),
             returnValue: _i4.Future<_i2.Product>.value(
@@ -76,7 +76,7 @@ class MockProductRemoteDataSource extends _i1.Mock
           as _i4.Future<_i2.Product>);
 
   @override
-  _i4.Future<_i2.Product> deleteProduct(int? id) =>
+  _i4.Future<_i2.Product> deleteProduct(String? id) =>
       (super.noSuchMethod(
             Invocation.method(#deleteProduct, [id]),
             returnValue: _i4.Future<_i2.Product>.value(
@@ -135,7 +135,7 @@ class MockProductLocalDataSource extends _i1.Mock
           as _i4.Future<void>);
 
   @override
-  _i4.Future<_i2.Product> getProductById(int? id) =>
+  _i4.Future<_i2.Product> getProductById(String? id) =>
       (super.noSuchMethod(
             Invocation.method(#getProductById, [id]),
             returnValue: _i4.Future<_i2.Product>.value(
