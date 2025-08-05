@@ -48,6 +48,8 @@ dependencies:
   build_runner: ^2.4.9
   shared_preferences: ^2.5.3
   http: ^1.4.0
+  bloc: ^9.0.0
+  bloc_test: ^10.0.0
 
 
 dev_dependencies:
