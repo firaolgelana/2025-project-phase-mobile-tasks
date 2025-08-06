@@ -24,49 +24,51 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     required this.viewAllProducts, 
     required this.viewSpecificProduct
     }) : super(InitialState()) {
-    on<LoadAllProductEvent>((event, emit) async {
+      on<UpdateProductEvent>(_onUpdateProduct);
+      on<LoadAllProductEvent>(_onLoadAllProducts);
+      on<GetSingleProductEvent>(_onGetSingleProduct);
+      on<DeleteProductEvent>(_onDeleteProduct);
+      on<CreateProductEvent>(_onCreateProduct);
+    }
+    void _onLoadAllProducts(LoadAllProductEvent event, Emitter<ProductState> emit) async {
       emit(LoadingState());
       final result = await viewAllProducts();
       result.fold(
         (failure) => emit(ErrorState(failure.message)),
         (products) => emit(LoadedAllProductState(products)),
       );
-    });
+    }
 
-    on<GetSingleProductEvent>((event, emit) async {
+    void _onGetSingleProduct(GetSingleProductEvent event, Emitter<ProductState> emit) async {
       emit(LoadingState());
       final result = await viewSpecificProduct(event.productId);
       result.fold(
         (failure) => emit(ErrorState(failure.message)),
         (product) => emit(LoadedSingleProductState(product)),
       );
-    });
-
-    on<CreateProductEvent>((event, emit) async {
+    }
+    void _onUpdateProduct(UpdateProductEvent event, Emitter<ProductState> emit) async {
       emit(LoadingState());
-      final result = await createProduct(event.product);
+      final result = await updateProduct(event.product, event.productId);
       result.fold(
         (failure) => emit(ErrorState(failure.message)),
-        (_) => add(const LoadAllProductEvent()),
+        (product) => emit(LoadedSingleProductState(product)),
       );
-    });
-
-    on<UpdateProductEvent>((event, emit) async {
-      emit(LoadingState());
-      final result = await updateProduct(event.product);
-      result.fold(
-        (failure) => emit(ErrorState(failure.message)),
-        (_) => add(const LoadAllProductEvent()),
-      );
-    });
-
-    on<DeleteProductEvent>((event, emit) async {
+    }
+    void _onDeleteProduct(DeleteProductEvent event, Emitter<ProductState> emit) async {
       emit(LoadingState());
       final result = await deleteProduct(event.productId);
       result.fold(
         (failure) => emit(ErrorState(failure.message)),
         (_) => add(const LoadAllProductEvent()),
       );
-    });
-  }
+    }
+    void _onCreateProduct(CreateProductEvent event, Emitter<ProductState> emit) async {
+      emit(LoadingState());
+      final result = await createProduct(event.product);
+      result.fold(
+        (failure) => emit(ErrorState(failure.message)),
+        (product) => emit(LoadedSingleProductState(product)),
+      );
+    }
 }

@@ -18,6 +18,7 @@ void main() {
   });
 
   group('UpdateProductUsecase', () {
+    String productId = '1';
     final updatedProduct = const Product(
       id: '1',
       name: 'Updated Sneakers',
@@ -27,13 +28,13 @@ void main() {
     );
 
     test('should update product successfully', () async {
-      when(mockProductRepository.updateProduct(updatedProduct))
+      when(mockProductRepository.updateProduct(updatedProduct, productId))
           .thenAnswer((_) async => Right(updatedProduct));
 
-      final result = await usecase(updatedProduct);
+      final result = await usecase(updatedProduct, productId);
 
       expect(result, Right(updatedProduct));
-      verify(mockProductRepository.updateProduct(updatedProduct)).called(1);
+      verify(mockProductRepository.updateProduct(updatedProduct, productId)).called(1);
       verifyNoMoreInteractions(mockProductRepository);
     });
   });

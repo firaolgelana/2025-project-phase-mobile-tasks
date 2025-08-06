@@ -24,9 +24,10 @@ class GetSingleProductEvent extends ProductEvent {
 }
 
 class UpdateProductEvent extends ProductEvent {
+  final String productId;
   final Product product;
 
-  const UpdateProductEvent(this.product);
+  const UpdateProductEvent(this.product, this.productId);
 
   @override
   List<Object> get props => [product];

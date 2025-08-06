@@ -41,6 +41,7 @@ void main() {
   ];
 
   final tProduct = tProductList[0];
+  final String productId = '1';
 
   setUp(() {
     mockRemoteDataSource = MockProductRemoteDataSource();
@@ -185,7 +186,7 @@ void main() {
       test('should update product remotely', () async {
         when(mockRemoteDataSource.updateProduct(tProduct)).thenAnswer((_) async => tProduct);
 
-        final result = await repository.updateProduct(tProduct);
+        final result = await repository.updateProduct(tProduct, productId);
 
         verify(mockRemoteDataSource.updateProduct(tProduct));
         expect(result, Right(tProduct));
@@ -194,7 +195,7 @@ void main() {
       test('should return ServerFailure when update fails', () async {
         when(mockRemoteDataSource.updateProduct(tProduct)).thenThrow(ServerException());
 
-        final result = await repository.updateProduct(tProduct);
+        final result = await repository.updateProduct(tProduct, productId);
 
         expect(result, const Left(ServerFailure('Failed to update product')));
       });
@@ -202,7 +203,7 @@ void main() {
 
     runTestsOffline(() {
       test('should return NetworkFailure when offline', () async {
-        final result = await repository.updateProduct(tProduct);
+        final result = await repository.updateProduct(tProduct, productId);
 
         expect(result, const Left(NetworkFailure('No internet connection')));
       });

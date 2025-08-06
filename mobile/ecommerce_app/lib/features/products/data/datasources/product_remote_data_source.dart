@@ -18,7 +18,7 @@ class ProductRemoteDataSourceImp implements ProductRemoteDataSource {
   ProductRemoteDataSourceImp({required this.apiHelper});
 
   static const String baseUrl =
-      'https://g5-flutter-learning-path-be.onrender.com/api/v3/products';
+      'https://g5-flutter-learning-path-be-tvum.onrender.com/api/v1/products';
 
   @override
   Future<List<Product>> getAllProducts() async {

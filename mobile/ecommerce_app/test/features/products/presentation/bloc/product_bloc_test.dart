@@ -157,6 +157,7 @@ void main() {
     );
   });
   group('UpdateProductEvent', () {
+    final productId = '1234';
     final product = const Product(
       id: '1',
       name: 'Product 1',
@@ -168,14 +169,14 @@ void main() {
       'should emit [LoadingState, LoadedAllProductState] when a product is updated successfully',
       build: () {
         when(
-          mockUpdateProductUsecase(product),
+          mockUpdateProductUsecase(product, productId),
         ).thenAnswer((_) async => Right(product));
         when(
           mockViewAllProductsUsecase(),
         ).thenAnswer((_) async => Right([product]));
         return bloc;
       },
-      act: (bloc) => bloc.add(UpdateProductEvent(product)),
+      act: (bloc) => bloc.add(UpdateProductEvent(product, productId)),
       expect: () => [
         LoadingState(),
         LoadedAllProductState([product]),
@@ -184,12 +185,12 @@ void main() {
     blocTest<ProductBloc, ProductState>(
       'should emit [LoadingState, ErrorState] when updating a product fails',
       build: () {
-        when(mockUpdateProductUsecase(product)).thenAnswer(
+        when(mockUpdateProductUsecase(product, productId)).thenAnswer(
           (_) async => const Left(ServerFailure('Failed to update')),
         );
         return bloc;
       },
-      act: (bloc) => bloc.add(UpdateProductEvent(product)),
+      act: (bloc) => bloc.add(UpdateProductEvent(product, productId)),
       expect: () => [LoadingState(), const ErrorState('Failed to update')],
     );
   });
@@ -214,7 +215,10 @@ void main() {
         return bloc;
       },
       act: (bloc) => bloc.add(DeleteProductEvent(product.id)),
-      expect: () => [LoadingState(), LoadedAllProductState([product])],
+      expect: () => [
+        LoadingState(),
+        LoadedAllProductState([product]),
+      ],
     );
 
     blocTest<ProductBloc, ProductState>(

@@ -75,7 +75,7 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<Either<Failure, Product>> updateProduct(Product product) async {
+  Future<Either<Failure, Product>> updateProduct(Product product, String productId) async {
     if (await networkInfo.isConnected) {
       try {
         final updatedProduct = await remoteDataSource.updateProduct(product);

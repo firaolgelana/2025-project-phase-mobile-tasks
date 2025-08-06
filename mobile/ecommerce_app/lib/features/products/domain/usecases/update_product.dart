@@ -7,7 +7,7 @@ class UpdateProductUsecase {
   final ProductRepository repository;
   const UpdateProductUsecase(this.repository);
 
-  Future<Either<Failure, Product>> call(Product product) {
-    return repository.updateProduct(product);
+  Future<Either<Failure, Product>> call(Product product, String productId) {
+    return repository.updateProduct(product, productId);
   }
 }

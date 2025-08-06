@@ -138,7 +138,7 @@ class MockUpdateProductUsecase extends _i1.Mock
           as _i2.ProductRepository);
 
   @override
-  _i5.Future<_i3.Either<_i6.Failure, _i7.Product>> call(_i7.Product? product) =>
+  _i5.Future<_i3.Either<_i6.Failure, _i7.Product>> call(_i7.Product? product, String? productId) =>
       (super.noSuchMethod(
             Invocation.method(#call, [product]),
             returnValue: _i5.Future<_i3.Either<_i6.Failure, _i7.Product>>.value(

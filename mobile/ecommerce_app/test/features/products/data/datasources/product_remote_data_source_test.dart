@@ -23,11 +23,6 @@ void main() {
   });
 
   const tId = '1';
-  // final tProductModel = ProductModel.fromJson(json.decode(fixture('product.json')));
-  // final productListJson = fixture('products.json');
-  // final expectedList = (json.decode(productListJson) as List)
-  //     .map((item) => ProductModel.fromJson(item))
-  //     .toList();
   final singleJson = json.decode(fixture('product.json'))['data'];
   final productListJson = json.decode(fixture('products.json'))['data'];
 
@@ -47,7 +42,7 @@ void main() {
       final result = await dataSource.getAllProducts();
 
       expect(result, equals(expectedList));
-      verify(mockApiHelper.get('https://g5-flutter-learning-path-be.onrender.com/api/v3/products')).called(1);
+      verify(mockApiHelper.get('https://g5-flutter-learning-path-be-tvum.onrender.com/api/v1/products')).called(1);
     });
 
     test('should throw ServerException when status is not 200', () async {
@@ -66,7 +61,7 @@ void main() {
       final result = await dataSource.getProductById(tId);
 
       expect(result, equals(tProductModel));
-      verify(mockApiHelper.get('https://g5-flutter-learning-path-be.onrender.com/api/v3/products/$tId')).called(1);
+      verify(mockApiHelper.get('https://g5-flutter-learning-path-be-tvum.onrender.com/api/v1/products/$tId')).called(1);
     });
 
     test('should throw ServerException when status is not 200', () async {
@@ -87,7 +82,7 @@ void main() {
 
       expect(result, equals(tProductModel));
       verify(mockApiHelper.put(
-        'https://g5-flutter-learning-path-be.onrender.com/api/v3/products/${tProductModel.id}',
+        'https://g5-flutter-learning-path-be-tvum.onrender.com/api/v1/products/${tProductModel.id}',
         tProductModel.toJson(),
       )).called(1);
     });
@@ -110,7 +105,7 @@ void main() {
       final result = await dataSource.deleteProduct(tId);
 
       expect(result, equals(tProductModel));
-      verify(mockApiHelper.delete('https://g5-flutter-learning-path-be.onrender.com/api/v3/products/$tId')).called(1);
+      verify(mockApiHelper.delete('https://g5-flutter-learning-path-be-tvum.onrender.com/api/v1/products/$tId')).called(1);
     });
 
     test('should throw ServerException when status is not 200', () async {
@@ -131,7 +126,7 @@ void main() {
 
       expect(result, equals(tProductModel));
       verify(mockApiHelper.post(
-        'https://g5-flutter-learning-path-be.onrender.com/api/v3/products',
+        'https://g5-flutter-learning-path-be-tvum.onrender.com/api/v1/products',
         tProductModel.toJson(),
       )).called(1);
     });

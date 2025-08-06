@@ -4,6 +4,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/platform/network_info.dart';
+import 'core/utils/api_client_helper.dart';
 import 'features/products/data/datasources/product_local_data_source.dart';
 import 'features/products/data/datasources/product_remote_data_source.dart';
 import 'features/products/data/repositories/product_repository_impl.dart';
@@ -52,12 +53,13 @@ Future<void> init() async{
 
   // core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
+  sl.registerLazySingleton(() => ApiClientHelper(sl()));
 
   // external
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerLazySingleton(() => sharedPreferences);
   sl.registerLazySingleton(() => http.Client());
-  sl.registerLazySingleton(() => InternetConnectionChecker);
+  sl.registerLazySingleton<InternetConnectionChecker>(() => InternetConnectionChecker.createInstance());
 
 
 }
